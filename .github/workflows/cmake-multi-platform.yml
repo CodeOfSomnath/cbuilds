@@ -17,7 +17,7 @@ jobs:
       run: |
         sudo dpkg --add-architecture i386
         sudo apt-get update
-        sudo apt-get install -y libc6:i386 libstdc++6:i386
+        sudo apt-get install -y gcc-multilib g++-multilib libc6:i386 libstdc++6:i386
 
     - name: Set reusable strings for Ubuntu 32-bit
       id: strings
@@ -46,7 +46,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: cmake-build-artifacts-ubuntu-32bit-Release-${{ github.run_id }}
-        path: ${{ steps.strings.outputs.build-output-dir }}/bin  # Adjust if needed
+        path: ${{ steps.strings.outputs.build-output-dir }}  # Adjust if needed
 
   build-ubuntu-64bit:
     runs-on: ubuntu-latest
@@ -81,7 +81,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: cmake-build-artifacts-ubuntu-64bit-Release-${{ github.run_id }}
-        path: ${{ steps.strings.outputs.build-output-dir }}/bin  # Adjust if needed
+        path: ${{ steps.strings.outputs.build-output-dir }}  # Adjust if needed
 
   build-windows-32bit:
     runs-on: windows-latest
@@ -116,7 +116,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: cmake-build-artifacts-windows-32bit-Release-${{ github.run_id }}
-        path: ${{ steps.strings.outputs.build-output-dir }}/bin  # Adjust if needed
+        path: ${{ steps.strings.outputs.build-output-dir }}  # Adjust if needed
 
   build-windows-64bit:
     runs-on: windows-latest
@@ -151,4 +151,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: cmake-build-artifacts-windows-64bit-Release-${{ github.run_id }}
-        path: ${{ steps.strings.outputs.build-output-dir }}/bin  # Adjust if needed
+        path: ${{ steps.strings.outputs.build-output-dir }}  # Adjust if needed
