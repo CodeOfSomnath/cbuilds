@@ -13,6 +13,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Install 32-bit libraries
+      run: |
+        sudo dpkg --add-architecture i386
+        sudo apt-get update
+        sudo apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386
+
     - name: Set reusable strings for Ubuntu 32-bit
       id: strings
       shell: bash
@@ -37,7 +43,7 @@ jobs:
       run: ctest --build-config Release
 
     - name: Upload build artifacts for Ubuntu 32-bit
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3.1.0
       with:
         name: cmake-build-artifacts-ubuntu-32bit-Release-${{ github.run_id }}
         path: ${{ steps.strings.outputs.build-output-dir }}/bin  # Adjust if needed
