@@ -37,7 +37,7 @@ jobs:
       run: ctest --build-config Release
 
     - name: Upload build artifacts for Ubuntu 32-bit
-      uses: actions/upload-artifact@v3.1.0
+      uses: actions/upload-artifact@v4
       with:
         name: cmake-build-artifacts-ubuntu-32bit-Release-${{ github.run_id }}
         path: ${{ steps.strings.outputs.build-output-dir }}/bin  # Adjust if needed
@@ -72,7 +72,7 @@ jobs:
       run: ctest --build-config Release
 
     - name: Upload build artifacts for Ubuntu 64-bit
-      uses: actions/upload-artifact@v3.1.0
+      uses: actions/upload-artifact@v4
       with:
         name: cmake-build-artifacts-ubuntu-64bit-Release-${{ github.run_id }}
         path: ${{ steps.strings.outputs.build-output-dir }}/bin  # Adjust if needed
@@ -107,7 +107,7 @@ jobs:
       run: ctest --build-config Release
 
     - name: Upload build artifacts for Windows 32-bit
-      uses: actions/upload-artifact@v3.1.0
+      uses: actions/upload-artifact@v4
       with:
         name: cmake-build-artifacts-windows-32bit-Release-${{ github.run_id }}
         path: ${{ steps.strings.outputs.build-output-dir }}/bin  # Adjust if needed
@@ -142,7 +142,7 @@ jobs:
       run: ctest --build-config Release
 
     - name: Upload build artifacts for Windows 64-bit
-      uses: actions/upload-artifact@v3.1.0
+      uses: actions/upload-artifact@v4
       with:
         name: cmake-build-artifacts-windows-64bit-Release-${{ github.run_id }}
         path: ${{ steps.strings.outputs.build-output-dir }}/bin  # Adjust if needed
