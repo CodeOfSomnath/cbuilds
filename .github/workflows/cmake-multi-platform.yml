@@ -11,7 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Cotire Repository
+      uses: actions/checkout@v4
+      with:
+        repository: sakra/cotire
 
     - name: Install 32-bit libraries
       run: |
@@ -52,7 +55,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Cotire Repository
+      uses: actions/checkout@v4
+      with:
+        repository: sakra/cotire
 
     - name: Set reusable strings for Ubuntu 64-bit
       id: strings
@@ -87,7 +93,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Cotire Repository
+      uses: actions/checkout@v4
+      with:
+        repository: sakra/cotire
 
     - name: Set reusable strings for Windows 32-bit
       id: strings
@@ -122,7 +131,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Cotire Repository
+      uses: actions/checkout@v4
+      with:
+        repository: sakra/cotire
 
     - name: Set reusable strings for Windows 64-bit
       id: strings
