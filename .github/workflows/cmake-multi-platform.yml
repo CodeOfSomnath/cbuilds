@@ -1,4 +1,4 @@
-name: CMake on multiple platforms
+name: CMake Build and Upload Artifacts
 
 on:
   push:
@@ -7,59 +7,142 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-        build_type: [Release]
-        c_compiler: [gcc, clang, cl]
-        include:
-          - os: windows-latest
-            c_compiler: cl
-            cpp_compiler: cl
-          - os: ubuntu-latest
-            c_compiler: gcc
-            cpp_compiler: g++
-          - os: ubuntu-latest
-            c_compiler: clang
-            cpp_compiler: clang++
-        exclude:
-          - os: windows-latest
-            c_compiler: gcc
-          - os: windows-latest
-            c_compiler: clang
-          - os: ubuntu-latest
-            c_compiler: cl
+  build-ubuntu-32bit:
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set reusable strings
+    - name: Set reusable strings for Ubuntu 32-bit
       id: strings
       shell: bash
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-    - name: Configure CMake
+    - name: Configure CMake for Ubuntu 32-bit
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DCMAKE_CXX_COMPILER=g++
+        -DCMAKE_C_COMPILER=gcc
+        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_CXX_FLAGS=-m32  # For 32-bit build
+        -DCMAKE_C_FLAGS=-m32  # For 32-bit build
         -S ${{ github.workspace }}
 
-    - name: Build
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+    - name: Build for Ubuntu 32-bit
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config Release
 
-    - name: Test
+    - name: Test for Ubuntu 32-bit
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: ctest --build-config ${{ matrix.build_type }}
+      run: ctest --build-config Release
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
+    - name: Upload build artifacts for Ubuntu 32-bit
+      uses: actions/upload-artifact@v3.1.0
       with:
-        name: cmake-build-artifacts-${{ matrix.os }}-${{ matrix.build_type }}
-        path: ${{ steps.strings.outputs.build-output-dir }}  # Change this to the actual output directory
+        name: cmake-build-artifacts-ubuntu-32bit-Release-${{ github.run_id }}
+        path: ${{ steps.strings.outputs.build-output-dir }}/bin  # Adjust if needed
+
+  build-ubuntu-64bit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set reusable strings for Ubuntu 64-bit
+      id: strings
+      shell: bash
+      run: |
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+    - name: Configure CMake for Ubuntu 64-bit
+      run: >
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        -DCMAKE_CXX_COMPILER=g++
+        -DCMAKE_C_COMPILER=gcc
+        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_CXX_FLAGS=-m64  # For 64-bit build
+        -DCMAKE_C_FLAGS=-m64  # For 64-bit build
+        -S ${{ github.workspace }}
+
+    - name: Build for Ubuntu 64-bit
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config Release
+
+    - name: Test for Ubuntu 64-bit
+      working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      run: ctest --build-config Release
+
+    - name: Upload build artifacts for Ubuntu 64-bit
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: cmake-build-artifacts-ubuntu-64bit-Release-${{ github.run_id }}
+        path: ${{ steps.strings.outputs.build-output-dir }}/bin  # Adjust if needed
+
+  build-windows-32bit:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set reusable strings for Windows 32-bit
+      id: strings
+      shell: bash
+      run: |
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+    - name: Configure CMake for Windows 32-bit
+      run: >
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        -DCMAKE_CXX_COMPILER=cl
+        -DCMAKE_C_COMPILER=cl
+        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_CXX_FLAGS=/arch:IA32  # For 32-bit build
+        -DCMAKE_C_FLAGS=/arch:IA32  # For 32-bit build
+        -S ${{ github.workspace }}
+
+    - name: Build for Windows 32-bit
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config Release
+
+    - name: Test for Windows 32-bit
+      working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      run: ctest --build-config Release
+
+    - name: Upload build artifacts for Windows 32-bit
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: cmake-build-artifacts-windows-32bit-Release-${{ github.run_id }}
+        path: ${{ steps.strings.outputs.build-output-dir }}/bin  # Adjust if needed
+
+  build-windows-64bit:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set reusable strings for Windows 64-bit
+      id: strings
+      shell: bash
+      run: |
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+    - name: Configure CMake for Windows 64-bit
+      run: >
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        -DCMAKE_CXX_COMPILER=cl
+        -DCMAKE_C_COMPILER=cl
+        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_CXX_FLAGS=/arch:AVX2  # For 64-bit build
+        -DCMAKE_C_FLAGS=/arch:AVX2  # For 64-bit build
+        -S ${{ github.workspace }}
+
+    - name: Build for Windows 64-bit
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config Release
+
+    - name: Test for Windows 64-bit
+      working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      run: ctest --build-config Release
+
+    - name: Upload build artifacts for Windows 64-bit
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: cmake-build-artifacts-windows-64bit-Release-${{ github.run_id }}
+        path: ${{ steps.strings.outputs.build-output-dir }}/bin  # Adjust if needed
